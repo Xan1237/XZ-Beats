@@ -1,0 +1,42 @@
+# Projucer Generated Files
+JuceLibraryCode/
+Builds/
+*.jucer.user
+*.jucer.settings
+
+# IDE Specific Files
+# Visual Studio
+.vs/
+*.vcxproj.user
+*.suo
+*.opensdf
+*.sdf
+*.VC.db
+
+# Xcode
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.DS_Store
+DerivedData/
+
+# CMake Build Artifacts
+build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+
+# macOS Specific Files
+.DS_Store
+
+# Windows Specific Files
+Thumbs.db
+desktop.ini
+
+# Linux Specific Files
+*.swp # Vim swap files
+
+# Temporary Files
+*~
+*.bak
+*.tmp
