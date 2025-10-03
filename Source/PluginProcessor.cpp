@@ -51,6 +51,7 @@ DrumSimulatorAudioProcessor::DrumSimulatorAudioProcessor()
                 loadSample(i, sampleFile);
         }
     }
+
 }
 
 DrumSimulatorAudioProcessor::~DrumSimulatorAudioProcessor()

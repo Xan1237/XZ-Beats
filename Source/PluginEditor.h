@@ -72,6 +72,7 @@ private:
     std::unique_ptr<juce::Label> instructionsLabel;
     std::unique_ptr<juce::GroupComponent> drumPadsGroup;
     std::unique_ptr<juce::GroupComponent> controlsGroup;
+    juce::Image drumKitImage;
 
     // Parameter attachments
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;

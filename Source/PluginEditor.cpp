@@ -1,6 +1,20 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+class BorderlessButtonLookAndFeel : public juce::LookAndFeel_V4
+{
+public:
+    void drawButtonBackground(juce::Graphics& g,
+        juce::Button& button,
+        const juce::Colour& backgroundColour,
+        bool isMouseOverButton,
+        bool isButtonDown) override
+    {
+        // Only fill with background colour, no border
+        g.setColour(backgroundColour);
+        g.fillRoundedRectangle(button.getLocalBounds().toFloat(), 5.0f);
+    }
+};
 //==============================================================================
 DrumSimulatorAudioProcessorEditor::DrumSimulatorAudioProcessorEditor(DrumSimulatorAudioProcessor& p)
     : AudioProcessorEditor(&p), audioProcessor(p)
@@ -19,9 +33,8 @@ DrumSimulatorAudioProcessorEditor::DrumSimulatorAudioProcessorEditor(DrumSimulat
     instructionsLabel->setColour(juce::Label::textColourId, juce::Colours::lightgrey);
     addAndMakeVisible(*instructionsLabel);
 
-    drumPadsGroup = std::make_unique<juce::GroupComponent>("pads", "Drum Pads");
-    drumPadsGroup->setColour(juce::GroupComponent::textColourId, juce::Colours::white);
-    addAndMakeVisible(*drumPadsGroup);
+  
+   
 
     controlsGroup = std::make_unique<juce::GroupComponent>("controls", "Controls");
     controlsGroup->setColour(juce::GroupComponent::textColourId, juce::Colours::white);
@@ -39,6 +52,18 @@ DrumSimulatorAudioProcessorEditor::DrumSimulatorAudioProcessorEditor(DrumSimulat
 
     // Set size
     setSize(900, 700);
+    // Load drum kit PNG from the project folder
+    auto drumKitFile = juce::File("E:\\JUCE\\Programs\\XZ Beats\\drumspic\\drumset.jpg");
+
+
+    if (drumKitFile.existsAsFile())
+    {
+        drumKitImage = juce::ImageFileFormat::loadFrom(drumKitFile);
+    }
+    else
+    {
+        juce::Logger::writeToLog("Drum kit image not found!");
+    }
 }
 
 DrumSimulatorAudioProcessorEditor::~DrumSimulatorAudioProcessorEditor()
@@ -62,7 +87,19 @@ void DrumSimulatorAudioProcessorEditor::paint(juce::Graphics& g)
     {
         drawDrumPad(g, pad);
     }
+     g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+
+    if (drumKitImage.isValid())
+    {
+        g.drawImage(drumKitImage, getLocalBounds().toFloat());
+    }
+
+    g.setColour(juce::Colours::white);
+    g.setFont(15.0f);
+    g.drawFittedText("Drum Tester", getLocalBounds(), juce::Justification::centredTop, 1);
 }
+
+
 
 void DrumSimulatorAudioProcessorEditor::resized()
 {
@@ -80,8 +117,7 @@ void DrumSimulatorAudioProcessorEditor::resized()
     auto controlsArea = bounds.reduced(margin);
 
     // Set group bounds
-    drumPadsGroup->setBounds(drumPadsArea);
-    controlsGroup->setBounds(controlsArea);
+  
 
     // Layout drum pads in 2x4 grid
     auto padArea = drumPadsArea.reduced(20);
@@ -89,25 +125,15 @@ void DrumSimulatorAudioProcessorEditor::resized()
     int padHeight = (padArea.getHeight() - 20) / 2 - 10;
 
     // Top row
-    drumPads[DrumSimulatorAudioProcessor::KICK].bounds =
-        juce::Rectangle<int>(padArea.getX(), padArea.getY() + 20, padWidth, padHeight);
-    drumPads[DrumSimulatorAudioProcessor::SNARE].bounds =
-        juce::Rectangle<int>(padArea.getX() + (padWidth + 10), padArea.getY() + 20, padWidth, padHeight);
-    drumPads[DrumSimulatorAudioProcessor::HIHAT].bounds =
-        juce::Rectangle<int>(padArea.getX() + 2 * (padWidth + 10), padArea.getY() + 20, padWidth, padHeight);
-    drumPads[DrumSimulatorAudioProcessor::CRASH].bounds =
-        juce::Rectangle<int>(padArea.getX() + 3 * (padWidth + 10), padArea.getY() + 20, padWidth, padHeight);
+    drumPads[DrumSimulatorAudioProcessor::KICK].bounds = juce::Rectangle<int>(390,350, 240, 300);
+    drumPads[DrumSimulatorAudioProcessor::SNARE].bounds = juce::Rectangle<int>(300, 300, 120, 120);
+    drumPads[DrumSimulatorAudioProcessor::HIHAT].bounds = juce::Rectangle<int>(500, 250, 100, 100);
+    drumPads[DrumSimulatorAudioProcessor::CRASH].bounds = juce::Rectangle<int>(700, 200, 120, 120);
 
-    // Bottom row
-    int bottomY = padArea.getY() + 20 + padHeight + 10;
-    drumPads[DrumSimulatorAudioProcessor::TOM1].bounds =
-        juce::Rectangle<int>(padArea.getX(), bottomY, padWidth, padHeight);
-    drumPads[DrumSimulatorAudioProcessor::TOM2].bounds =
-        juce::Rectangle<int>(padArea.getX() + (padWidth + 10), bottomY, padWidth, padHeight);
-    drumPads[DrumSimulatorAudioProcessor::TOM3].bounds =
-        juce::Rectangle<int>(padArea.getX() + 2 * (padWidth + 10), bottomY, padWidth, padHeight);
-    drumPads[DrumSimulatorAudioProcessor::RIDE].bounds =
-        juce::Rectangle<int>(padArea.getX() + 3 * (padWidth + 10), bottomY, padWidth, padHeight);
+    drumPads[DrumSimulatorAudioProcessor::TOM1].bounds = juce::Rectangle<int>(250, 200, 100, 100);
+    drumPads[DrumSimulatorAudioProcessor::TOM2].bounds = juce::Rectangle<int>(400, 180, 100, 100);
+    drumPads[DrumSimulatorAudioProcessor::TOM3].bounds = juce::Rectangle<int>(550, 160, 100, 100);
+    drumPads[DrumSimulatorAudioProcessor::RIDE].bounds = juce::Rectangle<int>(650, 350, 120, 120);
 
     // Layout drum pad buttons
     for (auto& pad : drumPads)
@@ -140,14 +166,14 @@ void DrumSimulatorAudioProcessorEditor::resized()
 //==============================================================================
 void DrumSimulatorAudioProcessorEditor::setupDrumPads()
 {
-    setupDrumPad(DrumSimulatorAudioProcessor::KICK, "KICK", juce::Colours::red, juce::KeyPress('q'));
-    setupDrumPad(DrumSimulatorAudioProcessor::SNARE, "SNARE", juce::Colours::orange, juce::KeyPress('w'));
-    setupDrumPad(DrumSimulatorAudioProcessor::HIHAT, "HI-HAT", juce::Colours::yellow, juce::KeyPress('e'));
-    setupDrumPad(DrumSimulatorAudioProcessor::CRASH, "CRASH", juce::Colours::green, juce::KeyPress('r'));
-    setupDrumPad(DrumSimulatorAudioProcessor::TOM1, "TOM 1", juce::Colours::blue, juce::KeyPress('a'));
-    setupDrumPad(DrumSimulatorAudioProcessor::TOM2, "TOM 2", juce::Colours::indigo, juce::KeyPress('s'));
-    setupDrumPad(DrumSimulatorAudioProcessor::TOM3, "TOM 3", juce::Colours::violet, juce::KeyPress('d'));
-    setupDrumPad(DrumSimulatorAudioProcessor::RIDE, "RIDE", juce::Colours::cyan, juce::KeyPress('f'));
+    setupDrumPad(DrumSimulatorAudioProcessor::KICK, "", juce::Colours::transparentWhite, juce::KeyPress('q'));
+    setupDrumPad(DrumSimulatorAudioProcessor::SNARE, "", juce::Colours::orange, juce::KeyPress('w'));
+    setupDrumPad(DrumSimulatorAudioProcessor::HIHAT, "", juce::Colours::yellow, juce::KeyPress('e'));
+    setupDrumPad(DrumSimulatorAudioProcessor::CRASH, "", juce::Colours::green, juce::KeyPress('r'));
+    setupDrumPad(DrumSimulatorAudioProcessor::TOM1, "", juce::Colours::blue, juce::KeyPress('a'));
+    setupDrumPad(DrumSimulatorAudioProcessor::TOM2, "", juce::Colours::indigo, juce::KeyPress('s'));
+    setupDrumPad(DrumSimulatorAudioProcessor::TOM3, "", juce::Colours::violet, juce::KeyPress('d'));
+    setupDrumPad(DrumSimulatorAudioProcessor::RIDE, "", juce::Colours::cyan, juce::KeyPress('f'));
 }
 
 void DrumSimulatorAudioProcessorEditor::setupDrumPad(int index, const juce::String& name,
@@ -161,11 +187,13 @@ void DrumSimulatorAudioProcessorEditor::setupDrumPad(int index, const juce::Stri
 
     // Create drum pad button
     pad.button = std::make_unique<juce::TextButton>(name);
-    pad.button->setButtonText(name + "\n(" + juce::String(key.getTextCharacter()).toUpperCase() + ")");
-    pad.button->setColour(juce::TextButton::buttonColourId, color);
-    pad.button->setColour(juce::TextButton::buttonOnColourId, color.brighter(0.3f));
+    pad.button->setButtonText(name + "");
+    //pad.button->setLookAndFeel(new BorderlessButtonLookAndFeel());
+    pad.button->setColour(juce::TextButton::buttonColourId, juce::Colours::transparentWhite);
+    pad.button->setColour(juce::TextButton::buttonOnColourId, juce::Colours::transparentWhite);
     pad.button->setColour(juce::TextButton::textColourOffId, juce::Colours::white);
     pad.button->setColour(juce::TextButton::textColourOnId, juce::Colours::white);
+
     pad.button->addListener(this);
     addAndMakeVisible(*pad.button);
 
