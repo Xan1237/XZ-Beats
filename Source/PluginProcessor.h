@@ -125,14 +125,14 @@ private:
     // ***** ADD YOUR SAMPLE PATHS HERE *****
     // Replace these empty strings with paths to your drum samples
     std::array<juce::String, NUM_SOUNDS> samplePaths = {
-        "E:\\JUCE\\Programs\\XZ Beats\\SnareSamples\\Snare 5.wav", // KICK - Add path to kick drum sample here (e.g., "C:/Samples/kick.wav")
+        "E:\\JUCE\\Programs\\XZ Beats\\Kick Samples\\Kick 3.wav", // KICK - Add path to kick drum sample here (e.g., "C:/Samples/kick.wav")
         "E:\\JUCE\\Programs\\XZ Beats\\SnareSamples\\Snare 5.wav", // SNARE - Add path to snare drum sample here
-        "E:\\JUCE\\Programs\\XZ Beats\\SnareSamples\\Snare 5.wav", // HIHAT - Add path to hi-hat sample here
-        "E:\\JUCE\\Programs\\XZ Beats\\SnareSamples\\Snare 5.wav", // CRASH - Add path to crash cymbal sample here
-        "E:\\JUCE\\Programs\\XZ Beats\\SnareSamples\\Snare 5.wav", // TOM1 - Add path to tom 1 sample here
-        "E:\\JUCE\\Programs\\XZ Beats\\SnareSamples\\Snare 5.wav", // TOM2 - Add path to tom 2 sample here
-        "E:\\JUCE\\Programs\\XZ Beats\\SnareSamples\\Snare 5.wav", // TOM3 - Add path to tom 3 sample here
-        "E:\\JUCE\\Programs\\XZ Beats\\SnareSamples\\Snare 5.wav"  // RIDE - Add path to ride cymbal sample here
+        "E:\\JUCE\\Programs\\XZ Beats\\high-hat\\height-hat.mp3", // HIHAT - Add path to hi-hat sample here
+        "E:\\JUCE\\Programs\\XZ Beats\\crashSample\\crash.mp3", // CRASH - Add path to crash cymbal sample here
+        "E:\\JUCE\\Programs\\XZ Beats\\tom\\tom1.mp3", // TOM1 - Add path to tom 1 sample here
+        "E:\\JUCE\\Programs\\XZ Beats\\tom\\tom3.mp3", // TOM2 - Add path to tom 2 sample here
+        "E:\\JUCE\\Programs\\XZ Beats\\tom\\tom3.mp3", // TOM3 - Add path to tom 3 sample here
+        "E:\\JUCE\\Programs\\XZ Beats\\ride\\ride.mp3"  // RIDE - Add path to ride cymbal sample here
     };
 
     // Parameters

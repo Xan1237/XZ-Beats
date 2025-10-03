@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="zeuljk" name="XZ Beats" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
   <MAINGROUP id="uWqy8J" name="XZ Beats">
     <GROUP id="{3A96307C-EA3E-4E39-C3B3-F429A722873D}" name="Source">
       <FILE id="wlLM5J" name="PluginProcessor.cpp" compile="1" resource="0"
